@@ -23,7 +23,8 @@ public class User implements Serializable {
     private Long id;
 
     @NotBlank(message = "O Campo Nome não pode ser vazio")
-    private String name;
+    @Column(name = "user_name")
+    private String userName;
 
     @Email
     @NotBlank(message = "O Campo Email não pode ser vazio")
@@ -43,10 +44,10 @@ public class User implements Serializable {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
-    public User(Long id, String name, String email, String password,
+    public User(Long id, String userName, String email, String password,
                 LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isActive) {
         this.id = id;
-        this.name = name;
+        this.userName = userName;
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
@@ -69,12 +70,16 @@ public class User implements Serializable {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -124,7 +129,7 @@ public class User implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(id, user.id)
-                && Objects.equals(name, user.name)
+                && Objects.equals(userName, user.userName)
                 && Objects.equals(email, user.email)
                 && Objects.equals(password, user.password)
                 && Objects.equals(createdAt, user.createdAt)
@@ -134,14 +139,14 @@ public class User implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, createdAt, updatedAt, isActive);
+        return Objects.hash(id, userName, email, password, createdAt, updatedAt, isActive);
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", createdAt=" + createdAt +

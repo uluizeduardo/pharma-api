@@ -1,6 +1,7 @@
 package com.api.pharma.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
@@ -27,6 +28,7 @@ public class Customer implements Serializable {
 
     @NotBlank(message = "O Campo Telefone não pode ser vazio")
     @Column(name = "phone_number")
+    @Max(value = 11, message = "O Campo Telefone não pode ter mais de 11 dígitos")
     private String phoneNumber;
 
     @OneToOne

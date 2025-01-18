@@ -25,7 +25,8 @@ public class Address implements Serializable {
     private String street;
 
     @NotBlank(message = "O Campo Número não pode ser nulo")
-    private String number;
+    @Column(name = "address_number")
+    private String addressNumber;
 
     @NotBlank(message = "O Campo Complemento não pode ser nulo")
     private String complement;
@@ -46,11 +47,11 @@ public class Address implements Serializable {
     @NotBlank(message = "O Campo País não pode ser nulo")
     private String country;
 
-    public Address(Long id, String street, String number, String complement, String neighborhood,
+    public Address(Long id, String street, String addressNumber, String complement, String neighborhood,
                    String city, String state, String zipCode, String country) {
         this.id = id;
         this.street = street;
-        this.number = number;
+        this.addressNumber = addressNumber;
         this.complement = complement;
         this.neighborhood = neighborhood;
         this.city = city;
@@ -75,12 +76,12 @@ public class Address implements Serializable {
         this.street = street;
     }
 
-    public String getNumber() {
-        return number;
+    public String getAddressNumber() {
+        return addressNumber;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setAddressNumber(String addressNumber) {
+        this.addressNumber = addressNumber;
     }
 
     public String getComplement() {
@@ -138,7 +139,7 @@ public class Address implements Serializable {
         Address address = (Address) o;
         return Objects.equals(id, address.id)
                 && Objects.equals(street, address.street)
-                && Objects.equals(number, address.number)
+                && Objects.equals(addressNumber, address.addressNumber)
                 && Objects.equals(complement, address.complement)
                 && Objects.equals(neighborhood, address.neighborhood)
                 && Objects.equals(city, address.city)
@@ -149,7 +150,7 @@ public class Address implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, street, number, complement, neighborhood, city, state, zipCode, country);
+        return Objects.hash(id, street, addressNumber, complement, neighborhood, city, state, zipCode, country);
     }
 
     @Override
@@ -157,7 +158,7 @@ public class Address implements Serializable {
         return "Address{" +
                 "id=" + id +
                 ", street='" + street + '\'' +
-                ", number='" + number + '\'' +
+                ", number='" + addressNumber + '\'' +
                 ", complement='" + complement + '\'' +
                 ", neighborhood='" + neighborhood + '\'' +
                 ", city='" + city + '\'' +
