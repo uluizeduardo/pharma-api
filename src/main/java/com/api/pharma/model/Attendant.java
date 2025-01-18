@@ -70,7 +70,9 @@ public class Attendant implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Attendant attendant = (Attendant) o;
-        return Objects.equals(id, attendant.id) && Objects.equals(user, attendant.user) && Objects.equals(pharmacies, attendant.pharmacies);
+        return Objects.equals(id, attendant.id)
+                && Objects.equals(user, attendant.user)
+                && Objects.equals(pharmacies, attendant.pharmacies);
     }
 
     @Override

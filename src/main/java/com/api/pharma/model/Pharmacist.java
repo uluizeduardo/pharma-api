@@ -93,7 +93,11 @@ public class Pharmacist implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pharmacist that = (Pharmacist) o;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(crmNumber, that.crmNumber) && Objects.equals(specialty, that.specialty) && Objects.equals(pharmacies, that.pharmacies);
+        return Objects.equals(id, that.id)
+                && Objects.equals(user, that.user)
+                && Objects.equals(crmNumber, that.crmNumber)
+                && Objects.equals(specialty, that.specialty)
+                && Objects.equals(pharmacies, that.pharmacies);
     }
 
     @Override

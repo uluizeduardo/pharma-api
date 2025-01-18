@@ -70,7 +70,9 @@ public class Compounder implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Compounder that = (Compounder) o;
-        return Objects.equals(id, that.id) && Objects.equals(user, that.user) && Objects.equals(pharmacies, that.pharmacies);
+        return Objects.equals(id, that.id)
+                && Objects.equals(user, that.user)
+                && Objects.equals(pharmacies, that.pharmacies);
     }
 
     @Override

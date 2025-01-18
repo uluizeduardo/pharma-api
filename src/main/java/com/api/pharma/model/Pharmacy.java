@@ -43,7 +43,8 @@ public class Pharmacy implements Serializable {
     @NotBlank(message = "O Campo Endereço não pode ser vazio")
     private Address address;
 
-    public Pharmacy(Long id, String pharmacyName, String unitName, List<Pharmacist> pharmacists, List<Compounder> compounders, List<Attendant> attendants, Address address) {
+    public Pharmacy(Long id, String pharmacyName, String unitName, List<Pharmacist> pharmacists,
+                    List<Compounder> compounders, List<Attendant> attendants, Address address) {
         this.id = id;
         this.pharmacyName = pharmacyName;
         this.unitName = unitName;
@@ -114,7 +115,13 @@ public class Pharmacy implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pharmacy pharmacy = (Pharmacy) o;
-        return Objects.equals(id, pharmacy.id) && Objects.equals(pharmacyName, pharmacy.pharmacyName) && Objects.equals(unitName, pharmacy.unitName) && Objects.equals(pharmacists, pharmacy.pharmacists) && Objects.equals(compounders, pharmacy.compounders) && Objects.equals(attendants, pharmacy.attendants) && Objects.equals(address, pharmacy.address);
+        return Objects.equals(id, pharmacy.id)
+                && Objects.equals(pharmacyName, pharmacy.pharmacyName)
+                && Objects.equals(unitName, pharmacy.unitName)
+                && Objects.equals(pharmacists, pharmacy.pharmacists)
+                && Objects.equals(compounders, pharmacy.compounders)
+                && Objects.equals(attendants, pharmacy.attendants)
+                && Objects.equals(address, pharmacy.address);
     }
 
     @Override
