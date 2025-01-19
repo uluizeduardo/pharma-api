@@ -1,4 +1,4 @@
-package com.api.pharma.model;
+package com.api.pharma.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

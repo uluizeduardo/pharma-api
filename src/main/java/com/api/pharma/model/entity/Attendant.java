@@ -1,8 +1,7 @@
-package com.api.pharma.model;
+package com.api.pharma.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-
 import jakarta.validation.constraints.Positive;
 
 import java.io.Serial;
@@ -11,8 +10,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_compounders")
-public class Compounder implements Serializable {
+@Table(name = "tb_attendants")
+public class Attendant implements Serializable {
 
     @Serial
     private static final Long serialVersionUID = 1L;
@@ -23,19 +22,20 @@ public class Compounder implements Serializable {
     @Positive(message = "O Campo Id não pode ser negativo")
     private Long id;
 
-    @NotBlank(message = "O Campo Usuário não pode ser vazio")
     @OneToOne
+    @NotBlank(message = "O Campo Usuário não pode ser vazio")
     private User user;
 
+    @NotBlank(message = "O Campo Farmacia não pode ser vazio")
     @ManyToMany
     @JoinTable(
-        name = "tb_compounders_pharmacies",
-            joinColumns = @JoinColumn(name = "compounder_id"),
+            name = "tb_attendants_pharmacies",
+            joinColumns = @JoinColumn(name = "attendant_id"),
             inverseJoinColumns = @JoinColumn(name = "pharmacy_id")
     )
     private List<Pharmacy> pharmacies;
 
-    public Compounder(Long id, User user, List<Pharmacy> pharmacies) {
+    public Attendant(Long id, User user, List<Pharmacy> pharmacies) {
         this.id = id;
         this.user = user;
         this.pharmacies = pharmacies;
@@ -69,10 +69,10 @@ public class Compounder implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Compounder that = (Compounder) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(user, that.user)
-                && Objects.equals(pharmacies, that.pharmacies);
+        Attendant attendant = (Attendant) o;
+        return Objects.equals(id, attendant.id)
+                && Objects.equals(user, attendant.user)
+                && Objects.equals(pharmacies, attendant.pharmacies);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class Compounder implements Serializable {
 
     @Override
     public String toString() {
-        return "Compounder{" +
+        return "Attendant{" +
                 "id=" + id +
                 ", user=" + user +
                 '}';

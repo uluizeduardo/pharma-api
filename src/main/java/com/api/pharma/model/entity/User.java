@@ -1,5 +1,6 @@
-package com.api.pharma.model;
+package com.api.pharma.model.entity;
 
+import com.api.pharma.model.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -43,6 +44,9 @@ public class User implements Serializable {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User(Long id, String userName, String email, String password,
                 LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isActive) {
