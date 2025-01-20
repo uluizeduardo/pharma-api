@@ -7,6 +7,7 @@ import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -32,6 +33,7 @@ public class User implements Serializable {
     private String email;
 
     @NotBlank(message = "O Campo Senha não pode ser vazio")
+    @Column(name = "user_password")
     private String password;
 
     @FutureOrPresent
@@ -46,10 +48,15 @@ public class User implements Serializable {
     private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "user_role")
     private Role role;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Token> tokens;
+
     public User(Long id, String userName, String email, String password,
-                LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isActive) {
+                LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isActive,
+                Role role, List<Token> tokens) {
         this.id = id;
         this.userName = userName;
         this.email = email;
@@ -57,6 +64,8 @@ public class User implements Serializable {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isActive = isActive;
+        this.role = role;
+        this.tokens = tokens;
     }
 
 
@@ -127,6 +136,22 @@ public class User implements Serializable {
         isActive = active;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<Token> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -138,12 +163,13 @@ public class User implements Serializable {
                 && Objects.equals(password, user.password)
                 && Objects.equals(createdAt, user.createdAt)
                 && Objects.equals(updatedAt, user.updatedAt)
-                && Objects.equals(isActive, user.isActive);
+                && Objects.equals(isActive, user.isActive)
+                && Objects.equals(role, user.role);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, email, password, createdAt, updatedAt, isActive);
+        return Objects.hash(id, userName, email, password, createdAt, updatedAt, isActive, role);
     }
 
     @Override
