@@ -14,22 +14,38 @@ import java.util.Date;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * Service class responsible for managing JSON Web Tokens (JWT) in the application.
+ *
+ * <p>This class provides utility methods for:
+ * <ul>
+ *   <li>Generating JWT tokens.</li>
+ *   <li>Validating JWT tokens.</li>
+ *   <li>Extracting claims or specific information from JWT tokens.</li>
+ * </ul>
+ *
+ * <p>The JWTs are used for securing endpoints and ensuring only authenticated and
+ * authorized users can access certain resources.
+ *
+ * <p>This class is annotated with {@link Service}, making it a Spring-managed bean.
+ */
 @Service
 public class JwtService {
 
-    @Value("${application.security.jwt.secret}")
+    @Value("${application.setting.jwt.secret}")
     private String secretKey;
 
-    @Value("${application.security.jwt.expiration}")
+    @Value("${application.setting.jwt.expiration}")
     private long tokenExpiration;
 
-    @Value("${application.security.jwt.refresh-token.expiration}")
+    @Value("${application.setting.jwt.refresh-token.expiration}")
     private long refreshTokenExpiration;
 
     @Value("${application.setting.jwt.algorithm}")
     private String algorithm;
 
-
+    @Value("${application.setting.jwt.issuer}")
+    private String issuer;
 
     /**
      * Extracts the username (subject) from the provided JWT token.
@@ -63,6 +79,7 @@ public class JwtService {
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
+                .requireIssuer(issuer)
                 .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJwt(token)
@@ -150,4 +167,5 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
 }
