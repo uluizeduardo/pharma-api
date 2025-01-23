@@ -3,17 +3,20 @@ package com.api.pharma.model.entity;
 import com.api.pharma.model.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 
 @Entity
 @Table(name = "tb_users")
-public class User implements Serializable {
+public class User implements UserDetails, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -53,6 +56,9 @@ public class User implements Serializable {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Token> tokens;
+
+    public User() {
+    }
 
     public User(Long id, String userName, String email, String password,
                 LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isActive,
@@ -127,7 +133,6 @@ public class User implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-
     public Boolean getActive() {
         return isActive;
     }
@@ -150,6 +155,36 @@ public class User implements Serializable {
 
     public void setTokens(List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getAuthorities();
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
     }
 
     @Override
