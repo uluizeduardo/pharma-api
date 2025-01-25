@@ -2,10 +2,11 @@ package com.api.pharma.model.entity;
 
 import com.api.pharma.model.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_users")
 public class User implements UserDetails, Serializable {
@@ -59,6 +61,7 @@ public class User implements UserDetails, Serializable {
     private Role role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Token> tokens;
 
     @PrePersist
