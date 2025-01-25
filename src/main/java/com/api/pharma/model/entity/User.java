@@ -1,6 +1,7 @@
 package com.api.pharma.model.entity;
 
 import com.api.pharma.model.enums.Role;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -33,30 +34,33 @@ public class User implements UserDetails, Serializable {
     @Positive(message = "O Campo Id não pode ser negativo")
     private Long id;
 
-    @NotBlank(message = "O Campo Nome não pode ser vazio")
+    @JsonProperty("user_name")
     @Column(name = "user_name")
     private String userName;
 
     @Email
-    @NotBlank(message = "O Campo Email não pode ser vazio")
     private String email;
 
-    @NotBlank(message = "O Campo Senha não pode ser vazio")
+    @JsonProperty("user_password")
     @Column(name = "user_password")
     private String password;
 
     @FutureOrPresent
+    @JsonProperty("created_at")
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @FutureOrPresent
+    @JsonProperty("updated_at")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @JsonProperty("is_active")
     @Column(name = "is_active")
     private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
+    @JsonProperty("user_role")
     @Column(name = "user_role")
     private Role role;
 
