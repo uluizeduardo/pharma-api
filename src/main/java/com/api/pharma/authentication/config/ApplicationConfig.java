@@ -81,7 +81,7 @@ public class ApplicationConfig {
      * @return an instance of {@link PasswordEncoder}.
      */
     @Bean
-    private PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
