@@ -99,12 +99,11 @@ public class JwtService {
     /**
      * Generates a new authentication token with additional claims.
      *
-     * @param extraClaims additional claims to include in the token
      * @param userDetails the user's details
      * @return the generated authentication token
      */
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, tokenExpiration);
+    public String generateToken(UserDetails userDetails) {
+        return buildToken(Map.of(), userDetails, tokenExpiration);
     }
 
     /**
