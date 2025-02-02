@@ -3,10 +3,7 @@ package com.api.pharma.model.entity;
 import com.api.pharma.model.enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +19,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_users")
+@Table(name = "tb_users", uniqueConstraints = {
+        @UniqueConstraint(name = "uc_user_id", columnNames = {"id"})
+})
 public class User implements UserDetails, Serializable {
 
     @Serial
@@ -30,7 +29,6 @@ public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotBlank(message = "O Campo Id não pode ser nulo ou vazio")
     @Positive(message = "O Campo Id não pode ser negativo")
     private Long id;
 
@@ -45,12 +43,10 @@ public class User implements UserDetails, Serializable {
     @Column(name = "user_password")
     private String password;
 
-    @FutureOrPresent
     @JsonProperty("created_at")
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @FutureOrPresent
     @JsonProperty("updated_at")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
