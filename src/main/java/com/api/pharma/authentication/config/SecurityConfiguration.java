@@ -1,5 +1,6 @@
 package com.api.pharma.authentication.config;
 
+import com.api.pharma.utilities.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -13,8 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static com.api.pharma.model.enums.Role.MANAGER;
-import static com.api.pharma.model.enums.Role.PHARMACIST;
+import static com.api.pharma.model.enums.Role.*;
+import static org.springframework.http.HttpMethod.*;
 
 /**
  * Security configuration class for defining the application's security settings.
@@ -73,15 +74,20 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(request -> request.requestMatchers("v1/api-pharma/auth/**").permitAll()
-                        .requestMatchers("", "v1/api-pharma/user").hasAnyRole(MANAGER.name(), PHARMACIST.name()))
-
+                .authorizeHttpRequests(request -> request
+                                    // Public routes via constant
+                                    .requestMatchers(StringUtils.WHITE_LIST_URL).permitAll()
+                                    .requestMatchers(GET, "/v1/api-pharma/user").hasAnyRole(MANAGER.name(), PHARMACIST.name())
+                                    .requestMatchers(POST, "/v1/api-pharma/user").hasAnyRole(MANAGER.name(), PHARMACIST.name())
+                                    .anyRequest()
+                                    .authenticated()
+                )
                 .sessionManagement( session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
-                        logout.logoutUrl("/api/api-pharma/auth/logout")
-                                .addLogoutHandler(logoutHandler)
+                        logout.logoutUrl("/v1/api-pharma/auth/logout")
+                              .addLogoutHandler(logoutHandler)
                               .logoutSuccessHandler((request, response, authenticationProvider) -> SecurityContextHolder.clearContext()))
                 .build();
 
