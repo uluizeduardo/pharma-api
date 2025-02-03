@@ -1,6 +1,7 @@
 package com.api.pharma.authentication.config;
 
 import com.api.pharma.repository.TokenRepository;
+import com.api.pharma.utilities.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,9 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * JwtAuthenticationFilter is a custom filter for handling JWT-based authentication.
@@ -59,7 +62,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
 
         // Skip authentication for specific paths, like the auth endpoint
-        if(request.getServletPath().contains("/pharma-api/auth")) {
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+
+        // Rotas públicas (Swagger + Auth)
+        boolean isWhiteListed = Arrays.stream(StringUtils.WHITE_LIST_URL)
+                .anyMatch(patter -> antPathMatcher.match(patter, request.getRequestURI()));
+
+        if (isWhiteListed) {
             filterChain.doFilter(request, response);
             return;
         }
