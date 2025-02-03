@@ -1,6 +1,7 @@
 package com.api.pharma.model.entity;
 
 import com.api.pharma.model.enums.TokenType;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -38,6 +39,7 @@ public class Token implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @NotNull
+    @JsonProperty("user_id")
     @JoinColumn(name = "user_id")
     private User user;
 

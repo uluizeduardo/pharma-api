@@ -3,12 +3,16 @@ package com.api.pharma.model.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_attendants")
 public class Attendant implements Serializable {
@@ -18,7 +22,6 @@ public class Attendant implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotBlank(message = "O Campo Id não pode ser nulo ou vazio")
     @Positive(message = "O Campo Id não pode ser negativo")
     private Long id;
 
@@ -33,58 +36,7 @@ public class Attendant implements Serializable {
             joinColumns = @JoinColumn(name = "attendant_id"),
             inverseJoinColumns = @JoinColumn(name = "pharmacy_id")
     )
+    @ToString.Exclude
     private List<Pharmacy> pharmacies;
 
-    public Attendant(Long id, User user, List<Pharmacy> pharmacies) {
-        this.id = id;
-        this.user = user;
-        this.pharmacies = pharmacies;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<Pharmacy> getPharmacies() {
-        return pharmacies;
-    }
-
-    public void setPharmacies(List<Pharmacy> pharmacies) {
-        this.pharmacies = pharmacies;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Attendant attendant = (Attendant) o;
-        return Objects.equals(id, attendant.id)
-                && Objects.equals(user, attendant.user)
-                && Objects.equals(pharmacies, attendant.pharmacies);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, user, pharmacies);
-    }
-
-    @Override
-    public String toString() {
-        return "Attendant{" +
-                "id=" + id +
-                ", user=" + user +
-                '}';
-    }
 }
