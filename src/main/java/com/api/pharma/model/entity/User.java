@@ -17,10 +17,12 @@ import java.util.List;
 @Data
 @Builder
 @NoArgsConstructor
+@Getter
+@Setter
 @AllArgsConstructor
 @Entity
 @Table(name = "tb_users", uniqueConstraints = {
-        @UniqueConstraint(name = "uc_user_id", columnNames = {"id"})
+        @UniqueConstraint(name = "uc_user_email", columnNames = {"email"})
 })
 public class User implements UserDetails, Serializable {
 
