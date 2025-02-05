@@ -6,11 +6,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -103,7 +105,7 @@ public class JwtService {
      * @return the generated authentication token
      */
     public String generateToken(UserDetails userDetails) {
-        return buildToken(Map.of(), userDetails, tokenExpiration);
+        return buildToken(userDetails, tokenExpiration);
     }
 
     /**
@@ -113,22 +115,32 @@ public class JwtService {
      * @return the generated refresh token
      */
     public String generateRefreshToken(UserDetails userDetails) {
-        return buildToken(Map.of(), userDetails, refreshTokenExpiration);
+        return buildToken(userDetails, refreshTokenExpiration);
     }
 
     /**
      * Builds a token with the specified claims, user details, and expiration time.
      *
-     * @param extraClaims additional claims to include in the token
      * @param userDetails the user's details
      * @param tokenExpiration the expiration time in milliseconds
      * @return the generated token
      */
-    private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long tokenExpiration) {
+    private String buildToken(UserDetails userDetails, long tokenExpiration) {
+        //additional claims to include in the token
+        Map<String, Object> extraClaims = new HashMap<>();
+
+        extraClaims.put("role", userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .findFirst()
+                .map(authority -> authority.substring(5))
+                .orElseThrow(() -> new IllegalArgumentException("User has no role assigned")));
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
+                .setIssuer(issuer)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + tokenExpiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.valueOf(algorithm))
