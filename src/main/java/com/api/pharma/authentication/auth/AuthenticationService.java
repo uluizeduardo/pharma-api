@@ -150,14 +150,15 @@ public class AuthenticationService {
      * @param response the HTTP response to send the new tokens
      * @throws IOException if an error occurs while writing the response
      */
-    public void refreshToken(HttpServletRequest request,
-                                                         HttpServletResponse response) throws IOException {
+    public AuthenticationResponse refreshToken(HttpServletRequest request,
+                             HttpServletResponse response) throws IOException {
+
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
         final String userEmail;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
-            return;
+            throw new RuntimeException("Invalid or missing Authorization header");
         }
 
         refreshToken = authHeader.substring(7);
@@ -170,10 +171,10 @@ public class AuthenticationService {
                 revokeAllUserTokens(user);;
                 saveUserToken(user, accessToken);
 
-                var authResponse = new AuthenticationResponse(accessToken, refreshToken);
+                return new AuthenticationResponse(accessToken, refreshToken);
 
-                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
+        throw new RuntimeException("Invalid refresh token");
     }
 }
