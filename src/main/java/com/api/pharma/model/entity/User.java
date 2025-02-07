@@ -1,73 +1,70 @@
 package com.api.pharma.model.entity;
 
 import com.api.pharma.model.enums.Role;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
-
+@Data
+@Builder
+@NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
 @Entity
-@Table(name = "tb_users")
-public class User implements Serializable {
+@Table(name = "tb_users", uniqueConstraints = {
+        @UniqueConstraint(name = "uc_user_email", columnNames = {"email"})
+})
+public class User implements UserDetails, Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotBlank(message = "O Campo Id não pode ser nulo ou vazio")
     @Positive(message = "O Campo Id não pode ser negativo")
     private Long id;
 
-    @NotBlank(message = "O Campo Nome não pode ser vazio")
+    @JsonProperty("user_name")
     @Column(name = "user_name")
     private String userName;
 
     @Email
-    @NotBlank(message = "O Campo Email não pode ser vazio")
     private String email;
 
-    @NotBlank(message = "O Campo Senha não pode ser vazio")
+    @JsonProperty("user_password")
     @Column(name = "user_password")
     private String password;
 
-    @FutureOrPresent
+    @JsonProperty("created_at")
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @FutureOrPresent
+    @JsonProperty("updated_at")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @JsonProperty("is_active")
     @Column(name = "is_active")
     private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
+    @JsonProperty("user_role")
     @Column(name = "user_role")
     private Role role;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Token> tokens;
-
-    public User(Long id, String userName, String email, String password,
-                LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isActive,
-                Role role, List<Token> tokens) {
-        this.id = id;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.isActive = isActive;
-        this.role = role;
-        this.tokens = tokens;
-    }
-
 
     @PrePersist
     private void prePersist(){
@@ -79,109 +76,34 @@ public class User implements Serializable {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public List<Token> getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(List<Token> tokens) {
-        this.tokens = tokens;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getAuthorities();
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id)
-                && Objects.equals(userName, user.userName)
-                && Objects.equals(email, user.email)
-                && Objects.equals(password, user.password)
-                && Objects.equals(createdAt, user.createdAt)
-                && Objects.equals(updatedAt, user.updatedAt)
-                && Objects.equals(isActive, user.isActive)
-                && Objects.equals(role, user.role);
+    public String getUsername() {
+        return this.email;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, userName, email, password, createdAt, updatedAt, isActive, role);
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
     }
 
     @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", isActive=" + isActive +
-                '}';
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
     }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
+
 }

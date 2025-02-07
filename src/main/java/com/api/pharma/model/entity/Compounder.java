@@ -4,12 +4,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import jakarta.validation.constraints.Positive;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_compounders")
 public class Compounder implements Serializable {
@@ -19,7 +23,6 @@ public class Compounder implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotBlank(message = "O Campo Id não pode ser nulo ou vazio")
     @Positive(message = "O Campo Id não pode ser negativo")
     private Long id;
 
@@ -33,58 +36,7 @@ public class Compounder implements Serializable {
             joinColumns = @JoinColumn(name = "compounder_id"),
             inverseJoinColumns = @JoinColumn(name = "pharmacy_id")
     )
+    @ToString.Exclude
     private List<Pharmacy> pharmacies;
 
-    public Compounder(Long id, User user, List<Pharmacy> pharmacies) {
-        this.id = id;
-        this.user = user;
-        this.pharmacies = pharmacies;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<Pharmacy> getPharmacies() {
-        return pharmacies;
-    }
-
-    public void setPharmacies(List<Pharmacy> pharmacies) {
-        this.pharmacies = pharmacies;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Compounder that = (Compounder) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(user, that.user)
-                && Objects.equals(pharmacies, that.pharmacies);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, user, pharmacies);
-    }
-
-    @Override
-    public String toString() {
-        return "Compounder{" +
-                "id=" + id +
-                ", user=" + user +
-                '}';
-    }
 }
