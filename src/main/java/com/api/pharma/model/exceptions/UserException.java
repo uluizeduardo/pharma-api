@@ -2,6 +2,10 @@ package com.api.pharma.model.exceptions;
 
 import com.api.pharma.config.exceptionHandler.AlertException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.AuthenticationException;
 
 public class UserException extends AlertException {
 
@@ -37,5 +41,18 @@ public class UserException extends AlertException {
 
     public static AlertException AuthenticationFailed() {
         return new UserException("401", AUTHENTICATION_FAILED, HttpStatus.UNAUTHORIZED);
+    }
+
+    public static Exception AuthenticationFailed(AuthenticationException e) {
+        if(e instanceof DisabledException) {
+            return AccountDisabled();
+        }
+        if(e instanceof LockedException) {
+            return AccountBlocked();
+        }
+        if(e instanceof BadCredentialsException) {
+            return BadCredentials();
+        }
+        return AuthenticationFailed();
     }
 }

@@ -7,7 +7,6 @@ import com.api.pharma.model.enums.TokenType;
 import com.api.pharma.model.exceptions.UserException;
 import com.api.pharma.repository.TokenRepository;
 import com.api.pharma.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
@@ -106,7 +105,7 @@ public class AuthenticationService {
      * @param request the authentication details containing email and password
      * @return an AuthenticationResponse containing a JWT token and refresh token
      */
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws Exception {
 
         try {
             authenticationManager.authenticate(
@@ -115,14 +114,8 @@ public class AuthenticationService {
                             request.password()
                     )
             );
-        } catch (DisabledException e) {
-            throw UserException.AccountDisabled();
-        } catch (LockedException e) {
-            throw UserException.AccountBlocked();
-        } catch (BadCredentialsException e) {
-            throw UserException.BadCredentials();
         } catch (AuthenticationException e) {
-            throw UserException.AuthenticationFailed();
+            throw UserException.AuthenticationFailed(e);
         }
 
         var user         = userRepository.findByEmail(request.email())
