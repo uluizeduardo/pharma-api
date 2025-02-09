@@ -115,11 +115,11 @@ public class AuthenticationService {
                     )
             );
         } catch (AuthenticationException e) {
-            throw UserException.AuthenticationFailed(e);
+            throw UserException.fromAuthenticationFailed(e);
         }
 
         var user         = userRepository.findByEmail(request.email())
-                                         .orElseThrow(() -> UserException.UserEmailNotFound(request.email()));
+                                         .orElseThrow(() -> UserException.userEmailNotFound(request.email()));
         var jwtToken     = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
