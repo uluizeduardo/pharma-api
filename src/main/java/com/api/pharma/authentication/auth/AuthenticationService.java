@@ -4,14 +4,14 @@ import com.api.pharma.authentication.config.JwtService;
 import com.api.pharma.model.entity.Token;
 import com.api.pharma.model.entity.User;
 import com.api.pharma.model.enums.TokenType;
+import com.api.pharma.model.exceptions.UserException;
 import com.api.pharma.repository.TokenRepository;
 import com.api.pharma.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -105,15 +105,21 @@ public class AuthenticationService {
      * @param request the authentication details containing email and password
      * @return an AuthenticationResponse containing a JWT token and refresh token
      */
-    public AuthenticationResponse authenticate(AuthenticationRequest request){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.email(),
-                        request.password()
-                )
-        );
+    public AuthenticationResponse authenticate(AuthenticationRequest request) throws Exception {
 
-        var user         = userRepository.findByEmail(request.email()).orElseThrow();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.email(),
+                            request.password()
+                    )
+            );
+        } catch (AuthenticationException e) {
+            throw UserException.fromAuthenticationFailed(e);
+        }
+
+        var user         = userRepository.findByEmail(request.email())
+                                         .orElseThrow(() -> UserException.userEmailNotFound(request.email()));
         var jwtToken     = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
