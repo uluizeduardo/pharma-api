@@ -1,0 +1,43 @@
+services:
+  app:
+    env_file: .env
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "0.0.0.0:8080:8080"
+    volumes:
+      - app_data_volume:/app/data
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      app_bridge:
+
+    cpu_shares: 1024
+    mem_limit: 512m
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=pharma
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "127.0.0.1:3306:3306"  # Only accessible via host
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    networks:
+      app_bridge:
+
+volumes:
+  app_data_volume:
+  mysql_data:
+
+networks:
+  app_bridge:
+    driver: bridge
