@@ -1,4 +1,4 @@
-package com.api.pharma.auth.valueobjects.enums;
+package com.api.pharma.auth.enums;
 
 /**
  * Enum representing the status of a user in the system.
