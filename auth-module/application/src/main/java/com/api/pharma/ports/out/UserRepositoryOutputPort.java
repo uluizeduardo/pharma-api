@@ -1,6 +1,6 @@
-package com.api.pharma.auth.ports.out;
+package com.api.pharma.ports.out;
 
-import com.api.pharma.auth.entities.User;
+import com.api.pharma.entities.User;
 
 import java.util.Optional;
 

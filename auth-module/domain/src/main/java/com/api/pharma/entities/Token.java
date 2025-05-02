@@ -1,8 +1,8 @@
-package com.api.pharma.auth.entities;
+package com.api.pharma.entities;
 
-import com.api.pharma.auth.enums.TokenType;
-import com.api.pharma.auth.valueobjects.TokenId;
-import com.api.pharma.auth.valueobjects.UserId;
+import com.api.pharma.enums.TokenType;
+import com.api.pharma.valueobjects.TokenId;
+import com.api.pharma.valueobjects.UserId;
 
 import java.util.Objects;
 

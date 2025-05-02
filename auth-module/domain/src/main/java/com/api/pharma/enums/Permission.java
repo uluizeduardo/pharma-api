@@ -1,4 +1,4 @@
-package com.api.pharma.auth.enums;
+package com.api.pharma.enums;
 
 /**
  * Enum representing various permissions in the system.

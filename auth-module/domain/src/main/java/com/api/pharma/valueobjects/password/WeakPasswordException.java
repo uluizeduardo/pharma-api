@@ -1,4 +1,4 @@
-package com.api.pharma.auth.valueobjects.password;
+package com.api.pharma.valueobjects.password;
 
 /**
  * Domain exception thrown when a password does not meet

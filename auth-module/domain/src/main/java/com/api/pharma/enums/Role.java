@@ -1,8 +1,8 @@
-package com.api.pharma.auth.enums;
+package com.api.pharma.enums;
 
 import java.util.Set;
 
-import static com.api.pharma.auth.enums.Permission.*;
+import static com.api.pharma.enums.Permission.*;
 
 /**
  * Represents the roles available in the system, each with its own set of permissions.

@@ -1,4 +1,4 @@
-package com.api.pharma.auth.valueobjects.password;
+package com.api.pharma.valueobjects.password;
 
 /**
  * Defines the contract for validating plain text passwords

@@ -1,4 +1,4 @@
-package com.api.pharma.auth.valueobjects.password;
+package com.api.pharma.valueobjects.password;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 

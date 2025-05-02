@@ -1,4 +1,4 @@
-package com.api.pharma.auth.valueobjects;
+package com.api.pharma.valueobjects;
 
 /**
  * Represents an email address in the system.

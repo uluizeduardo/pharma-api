@@ -1,4 +1,4 @@
-package com.api.pharma.auth.valueobjects.password;
+package com.api.pharma.valueobjects.password;
 
 /**
  * Represents a text password that must be validated according to a PasswordPolicy
@@ -8,7 +8,7 @@ package com.api.pharma.auth.valueobjects.password;
  */
 public class Password {
 
-    private String value;
+    private final String value;
 
     public Password(String password, PasswordPolicy policy){
         if(password == null || password.isBlank()){

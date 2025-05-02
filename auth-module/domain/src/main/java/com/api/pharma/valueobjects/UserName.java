@@ -1,4 +1,4 @@
-package com.api.pharma.auth.valueobjects;
+package com.api.pharma.valueobjects;
 
 import java.util.Objects;
 import java.util.regex.Pattern;

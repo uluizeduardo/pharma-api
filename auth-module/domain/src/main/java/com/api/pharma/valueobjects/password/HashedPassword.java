@@ -1,4 +1,4 @@
-package com.api.pharma.auth.valueobjects.password;
+package com.api.pharma.valueobjects.password;
 
 /**
  * Represents a hashed password that has been securely encrypted
