@@ -14,10 +14,10 @@ public class AuditInfo {
     private final Instant updatedAt;
     private final UserId createdBy;
 
-    private AuditInfo(Instant createdAt, Instant updatedAt, UserId createdBy) {
-        this.createdAt = Objects.requireNonNull(createdAt, "createdAt must not be null");;
+    public AuditInfo(Instant createdAt, Instant updatedAt, UserId createdBy) {
+        this.createdAt = Objects.requireNonNull(createdAt, "createdAt must not be null");
         this.updatedAt = Objects.requireNonNull(updatedAt, "updatedAt must not be null");
-        this.createdBy = Objects.requireNonNull(createdBy, "createdBy must not be null");;
+        this.createdBy = Objects.requireNonNull(createdBy, "createdBy must not be null");
     }
 
     public static AuditInfo createdBy(UserId createdBy) {
