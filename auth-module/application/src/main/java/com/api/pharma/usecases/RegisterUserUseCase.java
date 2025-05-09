@@ -1,7 +1,7 @@
 package com.api.pharma.usecases;
 
+import com.api.pharma.dto.AuthenticationResponse;
 import com.api.pharma.dto.RegisterUserRequest;
-import com.api.pharma.dto.RegisterUserResponse;
 import com.api.pharma.entities.User;
 import com.api.pharma.enums.Role;
 import com.api.pharma.ports.in.RegisterUserInputPort;
@@ -36,7 +36,7 @@ public class RegisterUserUseCase implements RegisterUserInputPort {
     }
 
     @Override
-    public RegisterUserResponse registerUser(RegisterUserRequest request) {
+    public AuthenticationResponse registerUser(RegisterUserRequest request) {
 
         userRepositoryOutputPort.findByEmail(request.email()).ifPresent(user -> {
             throw new IllegalArgumentException("Email already in use");
@@ -58,6 +58,6 @@ public class RegisterUserUseCase implements RegisterUserInputPort {
 
         tokenRepositoryOutputPort.saveUserToken(user, jwtToken);
 
-        return new RegisterUserResponse(jwtToken, refreshToken);
+        return new AuthenticationResponse(jwtToken, refreshToken);
     }
 }
