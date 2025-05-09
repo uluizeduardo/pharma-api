@@ -3,10 +3,7 @@ package com.api.pharma.entities;
 import com.api.pharma.enums.Permission;
 import com.api.pharma.enums.Role;
 import com.api.pharma.enums.UserStatus;
-import com.api.pharma.valueobjects.AuditInfo;
-import com.api.pharma.valueobjects.Email;
-import com.api.pharma.valueobjects.UserId;
-import com.api.pharma.valueobjects.UserName;
+import com.api.pharma.valueobjects.*;
 import com.api.pharma.valueobjects.password.HashedPassword;
 
 import java.util.Objects;
@@ -36,7 +33,7 @@ public class User {
         this.auditInfo =Objects.requireNonNull(auditInfo, "Audit info must be provided explicitly");
     }
 
-    public static User selfRegisterd(UserName userName, Email email, HashedPassword hashedPassword, Role role) {
+    public static User selfRegistered(UserName userName, Email email, HashedPassword hashedPassword, Role role) {
         UserId id = new UserId(UUID.randomUUID());
         return new User(id, userName, email, hashedPassword, role, UserStatus.ACTIVE, AuditInfo.createdBy(id));
     }
@@ -48,5 +45,17 @@ public class User {
 
     public boolean hasPermission(Permission permission) {
         return role.getPermissions().contains(permission);
+    }
+
+    public UserState exportState() {
+        return new UserState(
+                id.getValue(),
+                userName.getValue(),
+                email.getValue(),
+                role,
+                status,
+                auditInfo.getCreatedAt(),
+                auditInfo.getCreatedBy().getValue()
+        );
     }
 }
