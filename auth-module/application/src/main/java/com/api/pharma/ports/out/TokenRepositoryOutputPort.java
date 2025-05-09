@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface TokenRepositoryOutputPort {
     void saveUserToken(User user, String jwtToken);
+    void revokeAllUserTokens(User user);
     List<Token> findAllValidTokenByUser(UUID userId);
     Optional<Token> findByToken(String token);
 }
