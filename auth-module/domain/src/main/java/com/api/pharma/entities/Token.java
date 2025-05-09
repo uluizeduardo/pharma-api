@@ -1,5 +1,6 @@
 package com.api.pharma.entities;
 
+import com.api.pharma.valueobjects.TokenState;
 import com.api.pharma.enums.TokenType;
 import com.api.pharma.valueobjects.TokenId;
 import com.api.pharma.valueobjects.UserId;
@@ -31,5 +32,16 @@ public class Token {
 
     public boolean isValid() {
         return !revoked && !expired;
+    }
+
+    public TokenState exportState() {
+        return new TokenState(
+                id.getValue(),
+                tokenValue,
+                tokenType,
+                revoked,
+                expired,
+                userId.getValue()
+        );
     }
 }
