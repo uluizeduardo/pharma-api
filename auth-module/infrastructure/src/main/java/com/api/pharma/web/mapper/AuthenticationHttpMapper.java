@@ -1,6 +1,8 @@
 package com.api.pharma.web.mapper;
 
+import com.api.pharma.dto.AuthenticationRequest;
 import com.api.pharma.dto.AuthenticationResponse;
+import com.api.pharma.web.dto.AuthenticationHttpRequest;
 import com.api.pharma.web.dto.AuthenticationHttpResponse;
 
 public class AuthenticationHttpMapper {
@@ -10,18 +12,18 @@ public class AuthenticationHttpMapper {
         throw new IllegalStateException("This is a utility class and cannot be instantiated");
     }
 
+
     /**
-     * Converts an `AuthenticationHttpResponse` object from the HTTP layer
-     * into an `AuthenticationResponse` object for the application layer.
+     * Converts an `AuthenticationHttpRequest` object from the HTTP layer
+     * into an `AuthenticationRequest` object for the application layer.
      *
-     * @param httpResponse the HTTP response containing the access token and refresh token
-     * @return an `AuthenticationResponse` object containing the access token
-     *         and refresh token for the application layer
+     * @param httpRequest the HTTP request containing the email and password
+     * @return an `AuthenticationRequest` object containing the email and password
      */
-    public static AuthenticationHttpResponse toApplication(AuthenticationHttpResponse httpResponse) {
-        return new AuthenticationHttpResponse(
-                httpResponse.accessToken(),
-                httpResponse.refreshToken()
+    public static AuthenticationRequest toApplication(AuthenticationHttpRequest httpRequest) {
+        return new AuthenticationRequest(
+                httpRequest.email(),
+                httpRequest.password()
         );
     }
 
