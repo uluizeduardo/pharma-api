@@ -9,7 +9,6 @@ import com.api.pharma.modules.auth_module.domain.valueobjects.password.HashedPas
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * Represents a user in the system with various attributes and behaviors.

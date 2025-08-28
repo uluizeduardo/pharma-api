@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import com.api.pharma.modules.auth_module.domain.enums.Role;
 import com.api.pharma.modules.auth_module.domain.enums.UserStatus;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;

@@ -24,17 +24,6 @@ public class UserException extends AlertException {
         super(message, httpStatus);
     }
 
-    public static AlertException userNotFound() {
-        return new UserException(UserMessages.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
-    }
-    public static AlertException userEmailNotFound(String email) {
-        return new UserException(UserMessages.USER_NOT_FOUND_BY_EMAIL + email, HttpStatus.NOT_FOUND);
-    }
-
-    public static AlertException emailAlreadyInUse(String email) {
-        return new UserException(UserMessages.EMAIL_ALREADY_IN_USE, HttpStatus.CONFLICT);
-    }
-
     public static AlertException accountDisabled() {
         return new UserException(UserMessages.ACCOUNT_DISABLED, HttpStatus.FORBIDDEN);
     }

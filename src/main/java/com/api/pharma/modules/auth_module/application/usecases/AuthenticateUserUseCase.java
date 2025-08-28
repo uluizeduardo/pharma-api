@@ -3,7 +3,6 @@ package com.api.pharma.modules.auth_module.application.usecases;
 import com.api.pharma.modules.auth_module.application.dto.AuthenticationRequest;
 import com.api.pharma.modules.auth_module.application.dto.AuthenticationResponse;
 import com.api.pharma.modules.auth_module.application.exceptions.UserException;
-import com.api.pharma.modules.auth_module.application.exceptions.constants.UserMessages;
 import com.api.pharma.modules.auth_module.application.ports.in.AuthenticateUserInputPort;
 import com.api.pharma.modules.auth_module.application.ports.out.AuthenticationManagerOutputPort;
 import com.api.pharma.modules.auth_module.application.ports.out.TokenRepositoryOutputPort;

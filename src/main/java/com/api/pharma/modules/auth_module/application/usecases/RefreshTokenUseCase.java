@@ -2,7 +2,6 @@ package com.api.pharma.modules.auth_module.application.usecases;
 
 import com.api.pharma.modules.auth_module.application.dto.AuthenticationResponse;
 import com.api.pharma.modules.auth_module.application.exceptions.UserException;
-import com.api.pharma.modules.auth_module.application.exceptions.constants.UserMessages;
 import com.api.pharma.modules.auth_module.application.ports.in.RefreshTokenInputPort;
 import com.api.pharma.modules.auth_module.application.ports.out.TokenRepositoryOutputPort;
 import com.api.pharma.modules.auth_module.application.ports.out.TokenServiceOutputPort;
