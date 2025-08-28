@@ -42,8 +42,59 @@ public class AlertExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UserException.class)
-    public ResponseEntity<ApiErrorResponse> handleEmailAlreadyInUseException(
+    public ResponseEntity<ApiErrorResponse> handleUserException(
             UserException ex,
+            HttpServletRequest request
+    ) {
+        var errorResponse = new ApiErrorResponse(
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                request.getMethod(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ApiErrorResponse> handleNullPointerException(
+            NullPointerException ex,
+            HttpServletRequest request
+    ) {
+        var errorResponse = new ApiErrorResponse(
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                request.getMethod(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiErrorResponse> handlerRuntimeException(
+            RuntimeException ex,
+            HttpServletRequest request
+    ) {
+        var errorResponse = new ApiErrorResponse(
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                request.getMethod(),
+                UUID.randomUUID().toString(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalArgumentException(
+            IllegalArgumentException ex,
             HttpServletRequest request
     ) {
         var errorResponse = new ApiErrorResponse(
