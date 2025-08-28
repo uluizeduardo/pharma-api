@@ -1,11 +1,12 @@
 package com.api.pharma.modules.auth_module.infrastrucure.security.token;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.api.pharma.modules.auth_module.infrastrucure.security.config.exception_handler.AlertException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -64,13 +65,19 @@ public class JwtProvider {
      * @return the claims contained in the token
      */
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .requireIssuer(issuer)
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .requireIssuer(issuer)
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException ex) {
+            throw new AlertException("Token has expired", HttpStatus.UNAUTHORIZED);
+        } catch (MalformedJwtException | SignatureException | IllegalArgumentException ex) {
+            throw new AlertException("Invalid token or malformed JWT", HttpStatus.BAD_REQUEST);
+        }
     }
 
     /**
