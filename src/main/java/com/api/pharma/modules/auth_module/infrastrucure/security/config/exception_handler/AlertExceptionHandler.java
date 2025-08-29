@@ -1,6 +1,7 @@
 package com.api.pharma.modules.auth_module.infrastrucure.security.config.exception_handler;
 
 import com.api.pharma.modules.auth_module.application.exceptions.UserException;
+import com.api.pharma.modules.auth_module.application.exceptions.constants.UserMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.Ordered;
@@ -19,26 +20,32 @@ import java.util.UUID;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class AlertExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private ResponseEntity<ApiErrorResponse> buildErrorResponse(
+            String message,
+            HttpStatus status,
+            HttpServletRequest request
+    ) {
+        var errorId = UUID.randomUUID().toString();
+        log.error("Error UUID= %s error message: %s", errorId, message);
+
+        var response = new ApiErrorResponse(
+                status.getReasonPhrase(),
+                status.value(),
+                message,
+                request.getRequestURI(),
+                request.getMethod(),
+                errorId,
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, status);
+    }
+
     @ExceptionHandler(AlertException.class)
     public ResponseEntity<?> alertExceptionHandler(
             final AlertException exception,
             final HttpServletRequest request) {
 
-        var errorId = UUID.randomUUID().toString();
-        log.error(String.format("Error UUID= %s error message: %s", errorId, exception.getMessage()), exception);
-
-        var response = new ApiErrorResponse(
-                exception.getHttpStatus().getReasonPhrase(),                        // `title`
-                exception.getHttpStatus().value(),                                  // `status`
-                exception.getMessage(),                                             // `detail`
-                request.getRequestURI(),                                            // `instance`
-                request.getMethod(),                                                // `method`
-                errorId,                                                            // `errorId`
-                LocalDateTime.now()                                                 // `timestamp`
-        );
-
-        return new ResponseEntity<>(response, exception.getHttpStatus());
-
+        return buildErrorResponse(exception.getMessage(), exception.getHttpStatus(), request);
     }
 
     @ExceptionHandler(UserException.class)
@@ -46,16 +53,14 @@ public class AlertExceptionHandler extends ResponseEntityExceptionHandler {
             UserException ex,
             HttpServletRequest request
     ) {
-        var errorResponse = new ApiErrorResponse(
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                request.getMethod(),
-                UUID.randomUUID().toString(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        HttpStatus status = switch (ex.getMessage()) {
+            case UserMessages.USER_NOT_FOUND, UserMessages.USER_NOT_FOUND_BY_EMAIL ->  HttpStatus.NOT_FOUND;
+            case UserMessages.EMAIL_ALREADY_IN_USE -> HttpStatus.CONFLICT;
+            case UserMessages.ACCOUNT_DISABLED, UserMessages.ACCOUNT_LOCKED -> HttpStatus.FORBIDDEN;
+            case UserMessages.INVALID_CREDENTIALS, UserMessages.AUTHENTICATION_FAILED -> HttpStatus.UNAUTHORIZED;
+            default -> HttpStatus.INTERNAL_SERVER_ERROR;
+        };
+        return buildErrorResponse(ex.getMessage(), status, request);
     }
 
     @ExceptionHandler(NullPointerException.class)
@@ -63,16 +68,7 @@ public class AlertExceptionHandler extends ResponseEntityExceptionHandler {
             NullPointerException ex,
             HttpServletRequest request
     ) {
-        var errorResponse = new ApiErrorResponse(
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                request.getMethod(),
-                UUID.randomUUID().toString(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -80,16 +76,7 @@ public class AlertExceptionHandler extends ResponseEntityExceptionHandler {
             RuntimeException ex,
             HttpServletRequest request
     ) {
-        var errorResponse = new ApiErrorResponse(
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                request.getMethod(),
-                UUID.randomUUID().toString(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return buildErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -97,16 +84,7 @@ public class AlertExceptionHandler extends ResponseEntityExceptionHandler {
             IllegalArgumentException ex,
             HttpServletRequest request
     ) {
-        var errorResponse = new ApiErrorResponse(
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                request.getMethod(),
-                UUID.randomUUID().toString(),
-                LocalDateTime.now()
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
 
 }
