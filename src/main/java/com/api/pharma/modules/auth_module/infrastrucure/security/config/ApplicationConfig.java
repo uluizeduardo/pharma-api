@@ -32,7 +32,7 @@ import java.util.Arrays;
  * </ul>
  *
  * <p>The class also uses {@code @Value} to inject properties from the
- * application's configuration file (e.g., application.properties or application.yml).
+ * application's configuration file (e.g., application-dev.properties or application.yml).
  */
 @Configuration
 public class ApplicationConfig {
