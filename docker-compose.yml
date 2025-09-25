@@ -6,6 +6,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - "0.0.0.0:8080:8080"
+      - "0.0.0.0:5006:5006"
     volumes:
       - app_data_volume:/app/data
     depends_on:
